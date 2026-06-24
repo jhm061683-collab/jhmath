@@ -13,7 +13,7 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
-    <meta property="og:description" content="맞춤형 시험 시간 계산 및 일시정지 가능한 타이머 제공">
+    <meta property="og:description" content="맞춤형 시험 시간 계산 및 종료 알람 타이머 제공">
     <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80">
     <meta property="og:url" content="https://jhm061683-collab.github.io/jhmath/">
 
@@ -124,7 +124,6 @@
             color: #2b8a3e;
         }
         
-        /* 타이머 영역 스타일 */
         .timer-section {
             margin-top: 24px;
             border-top: 2px dashed #dee2e6;
@@ -216,7 +215,39 @@
     var currentSchool = 'middle';
     var totalSeconds = 0; 
     var timerInterval = null;
-    var timerState = 'stopped'; // stopped, running, paused
+    var timerState = 'stopped'; 
+    var audioCtx = null; // 오디오 환경 변수
+
+    // 브라우저 내장 주파수를 이용해 삐- 소리를 내는 확실한 함수
+    function playBeep(duration, frequency, count) {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        var currentCount = 0;
+        function beep() {
+            if (currentCount >= count) return;
+            
+            var oscillator = audioCtx.createOscillator();
+            var gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency; // 주파수(높낮이)
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); // 볼륨
+            
+            oscillator.start();
+            
+            setTimeout(function() {
+                oscillator.stop();
+                currentCount++;
+                setTimeout(beep, 200); // 소리 사이의 간격 (0.2초)
+            }, duration);
+        }
+        beep();
+    }
 
     function setSchool(school) {
         if (timerState !== 'stopped') return; 
@@ -278,6 +309,11 @@
         var toggleBtn = document.getElementById('btn-toggle');
         var resetBtn = document.getElementById('btn-reset');
         
+        // 사용자가 버튼을 누르는 순간 오디오 환경 활성화 (브라우저 보안 우회 필수 조건)
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
         if (timerState === 'stopped' || timerState === 'paused') {
             if (totalSeconds <= 0) {
                 alert('시험지 만점을 입력해야 타이머를 시작할 수 있습니다.');
@@ -300,7 +336,14 @@
                     toggleBtn.innerText = '시험 시작';
                     toggleBtn.className = 'timer-btn btn-start';
                     resetBtn.style.display = 'none';
-                    alert('⏳ 시험 시간이 종료되었습니다!');
+                    
+                    // 0초가 되는 순간 0.4초짜리 삐- 소리를 3번 울림
+                    playBeep(400, 880, 3); 
+                    
+                    // 소리가 먼저 울리기 시작한 후 팝업 안내창 노출
+                    setTimeout(function() {
+                        alert('⏳ 시험 시간이 종료되었습니다!');
+                    }, 50);
                 } else {
                     updateTimerDisplay(totalSeconds);
                 }
@@ -335,5 +378,5 @@
     document.getElementById('my-score').addEventListener('keyup', calculate);
 </script>
 
-</body>
+</body
 </html>
