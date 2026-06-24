@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>시험 시간 & 점수 환산기</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", dotum, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+        }
+        h2 {
+            text-align: center;
+            color: #1a1f36;
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .school-toggle {
+            display: flex;
+            background-color: #f1f3f5;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .school-toggle button {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .school-toggle button.active {
+            background-color: #4c6ef5;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(76, 110, 245, 0.3);
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #dee2e6;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            -moz-appearance: textfield;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input:focus {
+            border-color: #4c6ef5;
+        }
+        .result-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+        .result-label {
+            font-size: 0.95rem;
+            color: #495057;
+        }
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1c7ed6;
+        }
+        .result-value.score {
+            color: #2b8a3e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>시험 시간 & 점수 환산기</h2>
+    
+    <div class="school-toggle">
+        <button id="btn-middle" class="active" onclick="setSchool('middle')">중학생 (35분)</button>
+        <button id="btn-high" onclick="setSchool('high')">고등학생 (40분)</button>
+    </div>
+
+    <div class="form-group">
+        <label for="max-score">시험지 만점 (점)</label>
+        <input type="number" id="max-score" placeholder="예: 80">
+    </div>
+    
+    <div class="form-group">
+        <label for="my-score">내가 맞은 총점 (점)</label>
+        <input type="number" id="my-score" placeholder="예: 40">
+    </div>
+
+    <div class="result-box">
+        <div class="result-item">
+            <span class="result-label">⏱️ 배정 시간</span>
+            <span class="result-value" id="res-time">- 분</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">💯 100점 환산 점수</span>
+            <span class="result-value score" id="res-score">- 점</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    var currentSchool = 'middle';
+
+    function setSchool(school) {
+        currentSchool = school;
+        document.getElementById('btn-middle').className = (school === 'middle') ? 'active' : '';
+        document.getElementById('btn-high').className = (school === 'high') ? 'active' : '';
+        calculate();
+    }
+
+    function calculate() {
+        var maxScoreInput = document.getElementById('max-score').value;
+        var myScoreInput = document.getElementById('my-score').value;
+        
+        var maxScore = parseFloat(maxScoreInput);
+        var myScore = parseFloat(myScoreInput);
+        
+        var resTime = document.getElementById('res-time');
+        var resScore = document.getElementById('res-score');
+
+        // 입력값이 비어있거나 유효하지 않으면 초기화
+        if (!maxScoreInput || isNaN(maxScore) || maxScore <= 0) {
+            resTime.innerText = '- 분';
+            resScore.innerText = '- 점';
+            return;
+        }
+
+        // 1. 시간 일할 계산
+        var baseTime = (currentSchool === 'middle') ? 35 : 40;
+        var calculatedTime = (baseTime * (maxScore / 100)).toFixed(1);
+        if (calculatedTime % 1 === 0) {
+            calculatedTime = parseInt(calculatedTime);
+        }
+        resTime.innerText = calculatedTime + ' 분';
+
+        // 2. 점수 환산
+        if (myScoreInput !== '' && !isNaN(myScore) && myScore >= 0) {
+            var convertedScore = ((myScore / maxScore) * 100).toFixed(1);
+            if (convertedScore % 1 === 0) {
+                convertedScore = parseInt(convertedScore);
+            }
+            resScore.innerText = convertedScore + ' 점';
+        } else {
+            resScore.innerText = '- 점';
+        }
+    }
+
+    // 카카오톡 브라우저에서 가장 안정적으로 실시간 입력을 감지하는 이벤트 리스너 추가
+    document.getElementById('max-score').addEventListener('input', calculate);
+    document.getElementById('max-score').addEventListener('keyup', calculate);
+    document.getElementById('my-score').addEventListener('input', calculate);
+    document.getElementById('my-score').addEventListener('keyup', calculate);
+</script>
+
+</body>
+</html>
