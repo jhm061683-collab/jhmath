@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
+    <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
+
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
-    <meta property="og:description" content="맞춤형 시험 시간 계산 및 실시간 타이머 기능 제공">
+    <meta property="og:description" content="맞춤형 시험 시간 계산 및 일시정지 가능한 타이머 제공">
     <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80">
     <meta property="og:url" content="https://jhm061683-collab.github.io/jhmath/">
 
@@ -117,7 +124,7 @@
             color: #2b8a3e;
         }
         
-        /* 타이머 섹션 스타일 */
+        /* 타이머 영역 스타일 */
         .timer-section {
             margin-top: 24px;
             border-top: 2px dashed #dee2e6;
@@ -129,27 +136,37 @@
             font-weight: 800;
             color: #212529;
             margin: 10px 0 16px 0;
-            font-variant-numeric: tabular-nums; /* 숫자 폭 고정 */
+            font-variant-numeric: tabular-nums;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
         }
         .timer-btn {
-            width: 100%;
+            flex: 1;
             padding: 14px;
             font-size: 1.1rem;
             font-weight: 700;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
         }
         .btn-start {
             background-color: #12b886;
             color: white;
             box-shadow: 0 4px 12px rgba(18, 184, 134, 0.25);
         }
-        .btn-stop {
+        .btn-pause {
+            background-color: #f59f00;
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 159, 0, 0.25);
+        }
+        .btn-reset {
             background-color: #fa5252;
             color: white;
             box-shadow: 0 4px 12px rgba(250, 82, 82, 0.25);
+            flex: 0 0 35%;
         }
     </style>
 </head>
@@ -187,18 +204,22 @@
     <div class="timer-section">
         <label>⏳ 실시간 시험 타이머</label>
         <div class="timer-display" id="timer-text">00:00</div>
-        <button id="timer-control-btn" class="timer-btn btn-start" onclick="toggleTimer()">시험 시작</button>
+        
+        <div class="btn-container">
+            <button id="btn-toggle" class="timer-btn btn-start" onclick="toggleTimer()">시험 시작</button>
+            <button id="btn-reset" class="timer-btn btn-reset" onclick="resetTimer()" style="display: none;">초기화</button>
+        </div>
     </div>
 </div>
 
 <script>
     var currentSchool = 'middle';
-    var totalSeconds = 0; // 타이머 총 초값
+    var totalSeconds = 0; 
     var timerInterval = null;
-    var isRunning = false;
+    var timerState = 'stopped'; // stopped, running, paused
 
     function setSchool(school) {
-        if (isRunning) return; // 타이머 작동 중에는 학교 변경 금지
+        if (timerState !== 'stopped') return; 
         currentSchool = school;
         document.getElementById('btn-middle').className = (school === 'middle') ? 'active' : '';
         document.getElementById('btn-high').className = (school === 'high') ? 'active' : '';
@@ -218,26 +239,22 @@
         if (!maxScoreInput || isNaN(maxScore) || maxScore <= 0) {
             resTime.innerText = '- 분';
             resScore.innerText = '- 점';
-            if (!isRunning) updateTimerDisplay(0);
+            if (timerState === 'stopped') updateTimerDisplay(0);
             return;
         }
 
-        // 1. 시간 일할 계산
         var baseTime = (currentSchool === 'middle') ? 35 : 40;
         var calculatedTime = baseTime * (maxScore / 100);
         
-        // 배정 시간 텍스트 출력용 처리 (소수점 정리)
         var displayTime = calculatedTime.toFixed(1);
         if (displayTime % 1 === 0) displayTime = parseInt(displayTime);
         resTime.innerText = displayTime + ' 분';
 
-        // 타이머용 '초' 계산 (작동 중이 아닐 때만 갱신)
-        if (!isRunning) {
+        if (timerState === 'stopped') {
             totalSeconds = Math.round(calculatedTime * 60);
             updateTimerDisplay(totalSeconds);
         }
 
-        // 2. 점수 환산
         if (myScoreInput !== '' && !isNaN(myScore) && myScore >= 0) {
             var convertedScore = ((myScore / maxScore) * 100).toFixed(1);
             if (convertedScore % 1 === 0) {
@@ -249,40 +266,29 @@
         }
     }
 
-    // 타이머 화면 업데이트 함수
     function updateTimerDisplay(seconds) {
         var min = Math.floor(seconds / 60);
         var sec = seconds % 60;
-        
         var minStr = min < 10 ? '0' + min : min;
         var secStr = sec < 10 ? '0' + sec : sec;
-        
         document.getElementById('timer-text').innerText = minStr + ':' + secStr;
     }
 
-    // 타이머 시작 / 종료 제어
     function toggleTimer() {
-        var btn = document.getElementById('timer-control-btn');
+        var toggleBtn = document.getElementById('btn-toggle');
+        var resetBtn = document.getElementById('btn-reset');
         
-        if (isRunning) {
-            // 타이머 중단 시
-            clearInterval(timerInterval);
-            isRunning = false;
-            btn.innerText = '시험 시작';
-            btn.className = 'timer-btn btn-start';
-            calculate(); // 원래 배정 시간으로 리셋
-        } else {
-            // 타이머 시작 시
+        if (timerState === 'stopped' || timerState === 'paused') {
             if (totalSeconds <= 0) {
-                alert('시험지 만점을 입력해야 시간을 계산하고 타이머를 시작할 수 있습니다.');
+                alert('시험지 만점을 입력해야 타이머를 시작할 수 있습니다.');
                 return;
             }
             
-            isRunning = true;
-            btn.innerText = '시험 종료 (리셋)';
-            btn.className = 'timer-btn btn-stop';
+            timerState = 'running';
+            toggleBtn.innerText = '일시 정지';
+            toggleBtn.className = 'timer-btn btn-pause';
+            resetBtn.style.display = 'none';
             
-            // 입력창 비활성화하여 오작동 방지
             document.getElementById('max-score').blur();
             
             timerInterval = setInterval(function() {
@@ -290,15 +296,37 @@
                 if (totalSeconds <= 0) {
                     updateTimerDisplay(0);
                     clearInterval(timerInterval);
-                    isRunning = false;
-                    btn.innerText = '시험 시작';
-                    btn.className = 'timer-btn btn-start';
+                    timerState = 'stopped';
+                    toggleBtn.innerText = '시험 시작';
+                    toggleBtn.className = 'timer-btn btn-start';
+                    resetBtn.style.display = 'none';
                     alert('⏳ 시험 시간이 종료되었습니다!');
                 } else {
                     updateTimerDisplay(totalSeconds);
                 }
             }, 1000);
+            
+        } else if (timerState === 'running') {
+            clearInterval(timerInterval);
+            timerState = 'paused';
+            toggleBtn.innerText = '다시 시작';
+            toggleBtn.className = 'timer-btn btn-start';
+            resetBtn.style.display = 'block';
         }
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timerState = 'stopped';
+        
+        var toggleBtn = document.getElementById('btn-toggle');
+        var resetBtn = document.getElementById('btn-reset');
+        
+        toggleBtn.innerText = '시험 시작';
+        toggleBtn.className = 'timer-btn btn-start';
+        resetBtn.style.display = 'none';
+        
+        calculate();
     }
 
     document.getElementById('max-score').addEventListener('input', calculate);
