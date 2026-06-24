@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- 모바일 웹앱(PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -11,6 +12,7 @@
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
     <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
 
+    <!-- 카카오톡 썸네일 설정 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
     <meta property="og:description" content="맞춤형 시험 시간 계산 및 종료 알람 타이머 제공">
@@ -40,6 +42,7 @@
             width: 100%;
             max-width: 400px;
             padding: 24px;
+            position: relative;
         }
         h2 {
             text-align: center;
@@ -167,6 +170,56 @@
             box-shadow: 0 4px 12px rgba(250, 82, 82, 0.25);
             flex: 0 0 35%;
         }
+
+        /* 시험 종료 커스텀 팝업 창 스타일 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e03131;
+            margin-bottom: 10px;
+        }
+        .modal-body {
+            font-size: 1rem;
+            color: #495057;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: #4c6ef5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(76, 110, 245, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -211,42 +264,65 @@
     </div>
 </div>
 
+<!-- 알람 확인 팝업 레이어 -->
+<div class="modal-overlay" id="end-modal">
+    <div class="modal-content">
+        <div class="modal-title">⏳ 시험 종료</div>
+        <div class="modal-body">시험 시간이 모두 완료되었습니다!<br>지정된 환산 점수를 확인하세요.</div>
+        <button class="modal-btn" onclick="closeModal()">확인 (소리 끄기)</button>
+    </div>
+</div>
+
 <script>
     var currentSchool = 'middle';
     var totalSeconds = 0; 
     var timerInterval = null;
     var timerState = 'stopped'; 
-    var audioCtx = null; // 오디오 환경 변수
+    
+    // 오디오 관련 전역 변수
+    var audioCtx = null;
+    var alarmInterval = null;
 
-    // 브라우저 내장 주파수를 이용해 삐- 소리를 내는 확실한 함수
-    function playBeep(duration, frequency, count) {
+    // 부드러운 스피커 보호용 비프음 무한 루프 재생 함수
+    function startAlarm() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
         
-        var currentCount = 0;
-        function beep() {
-            if (currentCount >= count) return;
-            
+        function playSingleBeep() {
             var oscillator = audioCtx.createOscillator();
             var gainNode = audioCtx.createGain();
             
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             
-            oscillator.type = 'sine';
-            oscillator.frequency.value = frequency; // 주파수(높낮이)
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); // 볼륨
+            oscillator.type = 'sine'; // 가장 왜곡 없고 부드러운 사인파 형태
+            oscillator.frequency.value = 600; // 스피커에 자극이 덜하고 안정적인 중음역대 주파수
+            
+            // 볼륨을 서서히 켰다 꺼서 뚝뚝 끊기는 스피커 타격음 방지
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05); // 최대 볼륨 0.3 안정적 조절
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.25);
+            gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
             
             oscillator.start();
-            
-            setTimeout(function() {
-                oscillator.stop();
-                currentCount++;
-                setTimeout(beep, 200); // 소리 사이의 간격 (0.2초)
-            }, duration);
+            oscillator.stop(audioCtx.currentTime + 0.3);
         }
-        beep();
+
+        // 첫 소리 즉시 재생 후, 1초 간격으로 반복 재생 ("삑--- 삑---")
+        playSingleBeep();
+        alarmInterval = setInterval(playSingleBeep, 1000);
+    }
+
+    // [확인 (소리 끄기)] 버튼을 눌렀을 때 실행되는 함수
+    function closeModal() {
+        // 1. 반복 오디오 타이머 클리어
+        if (alarmInterval) {
+            clearInterval(alarmInterval);
+            alarmInterval = null;
+        }
+        // 2. 팝업창 닫기
+        document.getElementById('end-modal').style.display = 'none';
     }
 
     function setSchool(school) {
@@ -309,7 +385,6 @@
         var toggleBtn = document.getElementById('btn-toggle');
         var resetBtn = document.getElementById('btn-reset');
         
-        // 사용자가 버튼을 누르는 순간 오디오 환경 활성화 (브라우저 보안 우회 필수 조건)
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -337,13 +412,9 @@
                     toggleBtn.className = 'timer-btn btn-start';
                     resetBtn.style.display = 'none';
                     
-                    // 0초가 되는 순간 0.4초짜리 삐- 소리를 3번 울림
-                    playBeep(400, 880, 3); 
-                    
-                    // 소리가 먼저 울리기 시작한 후 팝업 안내창 노출
-                    setTimeout(function() {
-                        alert('⏳ 시험 시간이 종료되었습니다!');
-                    }, 50);
+                    // 팝업창을 띄우고 부드러운 연속 비프음 시작
+                    document.getElementById('end-modal').style.display = 'flex';
+                    startAlarm();
                 } else {
                     updateTimerDisplay(totalSeconds);
                 }
@@ -369,6 +440,12 @@
         toggleBtn.className = 'timer-btn btn-start';
         resetBtn.style.display = 'none';
         
+        if (alarmInterval) {
+            clearInterval(alarmInterval);
+            alarmInterval = null;
+        }
+        document.getElementById('end-modal').style.display = 'none';
+        
         calculate();
     }
 
@@ -378,5 +455,5 @@
     document.getElementById('my-score').addEventListener('keyup', calculate);
 </script>
 
-</body
+</body>
 </html>
