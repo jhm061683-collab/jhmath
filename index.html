@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- 모바일 웹앱(PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,7 +11,6 @@
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
     <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
 
-    <!-- 카카오톡 썸네일 설정 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
     <meta property="og:description" content="동산동의 자부심, 결과로 증명합니다! 맞춤형 시험 시간 계산기">
@@ -46,32 +44,42 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.03);
         }
         
-        /* [1] 브랜드 바 영역 (연한 회색 배경 띠) */
+        /* 최상단 브랜드 바 */
         .brand-top-bar {
             background-color: #f1f3f5;
-            padding: 22px 24px;
+            padding: 20px 24px;
             width: 100%;
-            text-align: center; /* 전체 중앙 정렬 제어 */
         }
-        
-        /* [핵심수정] 불필요한 서브 문구를 과감히 빼고 정중앙을 완벽히 잡은 대칭형 타이틀 */
         .brand-logo-line {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* 완벽한 수평 중앙 정렬 */
-            gap: 10px;
+            position: relative;
+            display: block;
+            text-align: center;
+            width: 100%;
+            height: 1.7rem;
             margin-bottom: 14px;
         }
+        .brand-title-container {
+            display: inline-block;
+            position: relative;
+        }
         .brand-title-text {
-            font-size: 1.8rem; /* 가운데 정렬에 맞춰 시원하게 크기 보강 */
-            font-weight: 900; /* Extra Bold 아주 굵고 진하게 */
+            font-size: 1.7rem;
+            font-weight: 900;
             color: #000000;
             letter-spacing: -1.2px;
             margin: 0;
             line-height: 1;
+            display: inline-block;
         }
-        
-        /* [2] 슬로건 영역 (중앙 정렬 기조 유지 및 명조체 품격 확보) */
+        .brand-book-icon {
+            position: absolute;
+            left: -26px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.7rem;
+            height: 1.4rem;
+            display: block;
+        }
         .brand-slogan-container {
             display: flex;
             align-items: center;
@@ -83,25 +91,23 @@
         .slogan-line {
             flex: 1;
             height: 1px;
-            background-color: #ced4da; /* 양옆 대칭을 이루는 가로선 스페이서 */
+            background-color: #ced4da;
         }
         .brand-slogan-text {
             font-size: 0.8rem;
-            color: #1b4332; /* 묵직한 다크 그린 톤 */
+            color: #1b4332;
             font-weight: 700;
-            letter-spacing: 1.5px; /* 자간 확장을 통한 정갈한 신뢰감 연출 */
+            letter-spacing: 1.5px;
             white-space: nowrap;
             font-family: "Noto Serif KR", "Georgia", serif;
         }
-        
-        /* [3] 하단 기능 영역과의 구분선 */
         .brand-separator {
             width: 100%;
             height: 1px;
             background-color: #dee2e6;
         }
         
-        /* 메인 도구 영역 */
+        /* 메인 콘텐츠 */
         .main-content {
             padding: 32px 24px 24px 24px;
             flex: 1;
@@ -110,10 +116,34 @@
             text-align: center;
             color: #1a1f36;
             margin-top: 0;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             font-size: 1.5rem;
             font-weight: 800;
             letter-spacing: -0.8px;
+        }
+
+        .subjective-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+        }
+        .subjective-option input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #2b8a3e;
+        }
+        .subjective-option span {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #495057;
         }
         
         .school-toggle {
@@ -143,6 +173,21 @@
         .form-group {
             margin-bottom: 20px;
         }
+        .input-with-btn {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-calc-pop {
+            padding: 0 16px;
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            color: #2b8a3e;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
         label {
             display: block;
             font-size: 0.88rem;
@@ -151,7 +196,7 @@
             margin-bottom: 8px;
             letter-spacing: -0.3px;
         }
-        input {
+        input[type="number"] {
             width: 100%;
             padding: 14px 16px;
             font-size: 1rem;
@@ -161,7 +206,7 @@
             transition: border-color 0.2s ease;
             background-color: #fafbfc;
         }
-        input:focus {
+        input[type="number"]:focus {
             border-color: #2b8a3e;
             background-color: #ffffff;
         }
@@ -255,6 +300,7 @@
             font-weight: 700;
         }
 
+        /* 모달 팝업 스타일 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -268,28 +314,51 @@
         .modal-content {
             background-color: #ffffff;
             border-radius: 16px;
-            padding: 28px;
+            padding: 24px;
             width: 100%;
-            max-width: 320px;
-            text-align: center;
+            max-width: 340px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             animation: popUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes popUp {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        
+        /* [진짜 일반 계산기 디자인] */
+        .calc-screen {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.3rem;
+            text-align: right;
+            border: 1.5px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            background-color: #f8f9fa;
+            font-weight: 700;
+            word-wrap: break-word;
+            min-height: 52px;
         }
-        .modal-title {
-            font-size: 1.35rem;
-            font-weight: 800;
+        .calc-pad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .calc-pad button {
+            padding: 16px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .calc-pad button:active {
+            background-color: #f1f3f5;
+        }
+        .calc-pad button.op {
+            background-color: #f1f3f5;
+            color: #2b8a3e;
+        }
+        .calc-pad button.cls {
+            background-color: #ffebd7;
             color: #e03131;
-            margin-bottom: 12px;
-        }
-        .modal-body {
-            font-size: 0.98rem;
-            color: #495057;
-            margin-bottom: 24px;
-            line-height: 1.6;
         }
         .modal-btn {
             width: 100%;
@@ -308,19 +377,17 @@
 <body>
 
 <div class="container">
-    <!-- 브랜드 바 영역 (완벽 중앙 밸런스 핏) -->
     <div class="brand-top-bar">
         <div class="brand-logo-line">
-            <!-- 수평 중앙에 이룸학원 타이포와 함께 위치할 벡터 북 마크 심볼 -->
-            <svg class="brand-book-icon" width="20" height="17" viewBox="0 0 110 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M55 78V20C43 20 23 11 11 15V71C26 68 43 75 55 78Z" fill="#52b788"/>
-                <path d="M55 78V20C67 20 87 11 99 15V71C84 68 67 75 55 78Z" fill="#52b788"/>
-                <rect x="52" y="17" width="6" height="64" rx="1" fill="#1b4332"/>
-            </svg>
-            <h1 class="brand-title-text">이룸학원</h1>
+            <div class="brand-title-container">
+                <svg class="brand-book-icon" viewBox="0 0 110 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M55 78V20C43 20 23 11 11 15V71C26 68 43 75 55 78Z" fill="#52b788"/>
+                    <path d="M55 78V20C67 20 87 11 99 15V71C84 68 67 75 55 78Z" fill="#52b788"/>
+                    <rect x="52" y="17" width="6" height="64" rx="1" fill="#1b4332"/>
+                </svg>
+                <h1 class="brand-title-text">이룸학원</h1>
+            </div>
         </div>
-        
-        <!-- 슬로건 영역 (가로선 스페이서 밸런스 고정) -->
         <div class="brand-slogan-container">
             <div class="slogan-line"></div>
             <div class="brand-slogan-text">동산동의 자부심, 결과로 증명합니다.</div>
@@ -328,26 +395,32 @@
         </div>
     </div>
     
-    <!-- 정교한 분리 구분선 -->
     <div class="brand-separator"></div>
     
-    <!-- 메인 도구 UI 영역 -->
     <div class="main-content">
         <h1 class="main-tool-title">시험 시간 & 점수 환산기</h1>
+
+        <label class="subjective-option" for="check-subjective">
+            <input type="checkbox" id="check-subjective" onchange="calculate()">
+            <span>📝 서술형 문항 포함 (중등 45분 / 고등 50분 기준)</span>
+        </label>
         
         <div class="school-toggle">
-            <button id="btn-middle" class="active" onclick="setSchool('middle')">중학생 (35분)</button>
-            <button id="btn-high" onclick="setSchool('high')">고등학생 (40분)</button>
+            <button id="btn-middle" class="active" onclick="setSchool('middle')">중학생</button>
+            <button id="btn-high" onclick="setSchool('high')">고등학생</button>
         </div>
 
         <div class="form-group">
             <label for="max-score">시험지 만점 (점)</label>
-            <input type="number" id="max-score" placeholder="예: 80">
+            <div class="input-with-btn">
+                <input type="number" id="max-score" placeholder="예: 80" step="any">
+                <button class="btn-calc-pop" onclick="openGeneralCalc()">🧮 배점 계산기</button>
+            </div>
         </div>
         
         <div class="form-group">
             <label for="my-score">내가 맞은 총점 (점)</label>
-            <input type="number" id="my-score" placeholder="예: 40">
+            <input type="number" id="my-score" placeholder="예: 40" step="any">
         </div>
 
         <div class="result-box">
@@ -378,6 +451,41 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="general-calc-modal">
+    <div class="modal-content">
+        <div class="calc-screen" id="calc-expr">0</div>
+        <div class="calc-pad">
+            <button class="cls" onclick="pressCalc('C')">C</button>
+            <button class="op" onclick="pressCalc('(')">(</button>
+            <button class="op" onclick="pressCalc(')')">)</button>
+            <button class="op" onclick="pressCalc('/')">÷</button>
+            
+            <button onclick="pressCalc('7')">7</button>
+            <button onclick="pressCalc('8')">8</button>
+            <button onclick="pressCalc('9')">9</button>
+            <button class="op" onclick="pressCalc('*')">×</button>
+            
+            <button onclick="pressCalc('4')">4</button>
+            <button onclick="pressCalc('5')">5</button>
+            <button onclick="pressCalc('6')">6</button>
+            <button class="op" onclick="pressCalc('-')">-</button>
+            
+            <button onclick="pressCalc('1')">1</button>
+            <button onclick="pressCalc('2')">2</button>
+            <button onclick="pressCalc('3')">3</button>
+            <button class="op" onclick="pressCalc('+')">+</button>
+            
+            <button onclick="pressCalc('0')">0</button>
+            <button onclick="pressCalc('.')">.</button>
+            <button class="op" style="grid-column: span 2; background-color: #2b8a3e; color: white;" onclick="pressCalc('=')">=</button>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <button class="timer-btn btn-sub" style="padding: 12px 0;" onclick="closeGeneralCalc()">닫기</button>
+            <button class="timer-btn btn-start" style="padding: 12px 0; background-color: #1c7ed6; box-shadow: none;" onclick="applyGeneralCalc()">만점으로 적용</button>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="end-modal">
     <div class="modal-content">
         <div class="modal-title">⏳ 시험 종료</div>
@@ -393,41 +501,85 @@
     var timerState = 'stopped'; 
     var audioCtx = null;
     var alarmInterval = null;
+    var wakeLock = null;
+
+    // 진짜 일반 계산기 로직
+    var calcExprStr = '';
+    function openGeneralCalc() {
+        if (timerState !== 'stopped') return;
+        calcExprStr = '';
+        document.getElementById('calc-expr').innerText = '0';
+        document.getElementById('general-calc-modal').style.display = 'flex';
+    }
+    function closeGeneralCalc() {
+        document.getElementById('general-calc-modal').style.display = 'none';
+    }
+    function pressCalc(val) {
+        var screen = document.getElementById('calc-expr');
+        if (val === 'C') {
+            calcExprStr = '';
+            screen.innerText = '0';
+        } else if (val === '=') {
+            try {
+                if (calcExprStr !== '') {
+                    // 수식 계산 후 소수점 둘째자리 커트
+                    var result = eval(calcExprStr);
+                    calcExprStr = (Math.round(result * 100) / 100).toString();
+                    screen.innerText = calcExprStr;
+                }
+            } catch(e) {
+                screen.innerText = '오류';
+                calcExprStr = '';
+            }
+        } else {
+            calcExprStr += val;
+            screen.innerText = calcExprStr;
+        }
+    }
+    function applyGeneralCalc() {
+        pressCalc('='); // 최종 계산 강제 수행
+        var finalVal = parseFloat(document.getElementById('calc-expr').innerText);
+        if (!isNaN(finalVal) && finalVal > 0) {
+            document.getElementById('max-score').value = finalVal;
+            calculate();
+            closeGeneralCalc();
+        }
+    }
+
+    // 화면 꺼짐 방지(Wake Lock) 제어
+    async function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+            try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+        }
+    }
+    function releaseWakeLock() {
+        if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
+    }
 
     function startAlarm() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        
+        if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         function playSingleBeep() {
             var oscillator = audioCtx.createOscillator();
             var gainNode = audioCtx.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            
             oscillator.type = 'sine';
             oscillator.frequency.value = 600;
-            
             gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
             gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.25);
             gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-            
             oscillator.start();
             oscillator.stop(audioCtx.currentTime + 0.3);
         }
-
         playSingleBeep();
         alarmInterval = setInterval(playSingleBeep, 1000);
     }
 
     function closeModal() {
-        if (alarmInterval) {
-            clearInterval(alarmInterval);
-            alarmInterval = null;
-        }
+        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
         document.getElementById('end-modal').style.display = 'none';
+        releaseWakeLock();
     }
 
     function setSchool(school) {
@@ -441,6 +593,7 @@
     function calculate() {
         var maxScoreInput = document.getElementById('max-score').value;
         var myScoreInput = document.getElementById('my-score').value;
+        var isSubjective = document.getElementById('check-subjective').checked;
         
         var maxScore = parseFloat(maxScoreInput);
         var myScore = parseFloat(myScoreInput);
@@ -455,9 +608,14 @@
             return;
         }
 
-        var baseTime = (currentSchool === 'middle') ? 35 : 40;
-        var calculatedTime = baseTime * (maxScore / 100);
+        var baseTime = 40;
+        if (isSubjective) {
+            baseTime = (currentSchool === 'middle') ? 45 : 50;
+        } else {
+            baseTime = (currentSchool === 'middle') ? 35 : 40;
+        }
         
+        var calculatedTime = baseTime * (maxScore / 100);
         var displayTime = calculatedTime.toFixed(1);
         if (displayTime % 1 === 0) displayTime = parseInt(displayTime);
         resTime.innerText = displayTime + ' 분';
@@ -469,9 +627,7 @@
 
         if (myScoreInput !== '' && !isNaN(myScore) && myScore >= 0) {
             var convertedScore = ((myScore / maxScore) * 100).toFixed(1);
-            if (convertedScore % 1 === 0) {
-                convertedScore = parseInt(convertedScore);
-            }
+            if (convertedScore % 1 === 0) convertedScore = parseInt(convertedScore);
             resScore.innerText = convertedScore + ' 점';
         } else {
             resScore.innerText = '- 점';
@@ -495,9 +651,7 @@
         var toggleBtn = document.getElementById('btn-toggle');
         var resetBtn = document.getElementById('btn-reset');
         
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         
         if (timerState === 'stopped' || timerState === 'paused') {
             if (totalSeconds <= 0) {
@@ -511,6 +665,7 @@
             resetBtn.style.display = 'none';
             
             document.getElementById('max-score').blur();
+            requestWakeLock(); // 타이머 시작과 동시에 화면 꺼짐 차단 활성화
             
             timerInterval = setInterval(function() {
                 totalSeconds--;
@@ -535,6 +690,7 @@
             toggleBtn.innerText = '다시 시작';
             toggleBtn.className = 'timer-btn btn-start';
             resetBtn.style.display = 'block';
+            releaseWakeLock();
         }
     }
 
@@ -549,12 +705,10 @@
         toggleBtn.className = 'timer-btn btn-start';
         resetBtn.style.display = 'none';
         
-        if (alarmInterval) {
-            clearInterval(alarmInterval);
-            alarmInterval = null;
-        }
+        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
         document.getElementById('end-modal').style.display = 'none';
         
+        releaseWakeLock();
         calculate();
     }
 </script>
