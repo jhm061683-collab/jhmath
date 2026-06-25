@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- 모바일 웹앱(PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -12,10 +11,9 @@
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
     <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
 
-    <!-- 카카오톡 썸네일 설정 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
-    <meta property="og:description" content="맞춤형 시험 시간 계산 및 종료 알람 타이머 제공">
+    <meta property="og:description" content="동산동 학원의 자부심! 맞춤형 시험 시간 계산 및 알람 타이머 제공">
     <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80">
     <meta property="og:url" content="https://jhm061683-collab.github.io/jhmath/">
 
@@ -44,12 +42,28 @@
             padding: 24px;
             position: relative;
         }
+        .brand-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .brand-logo {
+            max-width: 160px;
+            height: auto;
+            display: inline-block;
+        }
+        .brand-slogan {
+            font-size: 0.8rem;
+            color: #868e96;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            margin-top: 4px;
+        }
         h2 {
             text-align: center;
             color: #1a1f36;
             margin-top: 0;
             margin-bottom: 24px;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
         }
         .school-toggle {
@@ -72,9 +86,9 @@
             transition: all 0.2s ease;
         }
         .school-toggle button.active {
-            background-color: #4c6ef5;
+            background-color: #2b8a3e;
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(76, 110, 245, 0.3);
+            box-shadow: 0 2px 8px rgba(43, 138, 62, 0.3);
         }
         .form-group {
             margin-bottom: 16px;
@@ -96,7 +110,7 @@
             transition: border-color 0.2s ease;
         }
         input:focus {
-            border-color: #4c6ef5;
+            border-color: #2b8a3e;
         }
         .result-box {
             background-color: #f8f9fa;
@@ -171,7 +185,21 @@
             flex: 0 0 35%;
         }
 
-        /* 시험 종료 커스텀 팝업 창 스타일 */
+        .brand-footer {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f3f5;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #868e96;
+            line-height: 1.5;
+        }
+        .brand-footer a {
+            color: #2b8a3e;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -213,18 +241,23 @@
             padding: 12px;
             font-size: 1rem;
             font-weight: 700;
-            background-color: #4c6ef5;
+            background-color: #2b8a3e;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(76, 110, 245, 0.3);
+            box-shadow: 0 4px 10px rgba(43, 138, 62, 0.3);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="brand-header">
+        <img src="image_20ac9d.png" alt="이룸학원 로고" class="brand-logo">
+        <div class="brand-slogan">동산동 학원의 자부심!</div>
+    </div>
+    
     <h2>시험 시간 & 점수 환산기</h2>
     
     <div class="school-toggle">
@@ -262,9 +295,13 @@
             <button id="btn-reset" class="timer-btn btn-reset" onclick="resetTimer()" style="display: none;">초기화</button>
         </div>
     </div>
+
+    <div class="brand-footer">
+        이 프로그램은 <b>이룸익산학원</b>에서 제공합니다.<br>
+        교육 및 학습 상담: <a href="tel:010-9751-8180">010-9751-8180</a>
+    </div>
 </div>
 
-<!-- 알람 확인 팝업 레이어 -->
 <div class="modal-overlay" id="end-modal">
     <div class="modal-content">
         <div class="modal-title">⏳ 시험 종료</div>
@@ -278,12 +315,9 @@
     var totalSeconds = 0; 
     var timerInterval = null;
     var timerState = 'stopped'; 
-    
-    // 오디오 관련 전역 변수
     var audioCtx = null;
     var alarmInterval = null;
 
-    // 부드러운 스피커 보호용 비프음 무한 루프 재생 함수
     function startAlarm() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -296,12 +330,11 @@
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             
-            oscillator.type = 'sine'; // 가장 왜곡 없고 부드러운 사인파 형태
-            oscillator.frequency.value = 600; // 스피커에 자극이 덜하고 안정적인 중음역대 주파수
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 600;
             
-            // 볼륨을 서서히 켰다 꺼서 뚝뚝 끊기는 스피커 타격음 방지
             gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05); // 최대 볼륨 0.3 안정적 조절
+            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
             gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.25);
             gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
             
@@ -309,19 +342,15 @@
             oscillator.stop(audioCtx.currentTime + 0.3);
         }
 
-        // 첫 소리 즉시 재생 후, 1초 간격으로 반복 재생 ("삑--- 삑---")
         playSingleBeep();
         alarmInterval = setInterval(playSingleBeep, 1000);
     }
 
-    // [확인 (소리 끄기)] 버튼을 눌렀을 때 실행되는 함수
     function closeModal() {
-        // 1. 반복 오디오 타이머 클리어
         if (alarmInterval) {
             clearInterval(alarmInterval);
             alarmInterval = null;
         }
-        // 2. 팝업창 닫기
         document.getElementById('end-modal').style.display = 'none';
     }
 
@@ -412,7 +441,6 @@
                     toggleBtn.className = 'timer-btn btn-start';
                     resetBtn.style.display = 'none';
                     
-                    // 팝업창을 띄우고 부드러운 연속 비프음 시작
                     document.getElementById('end-modal').style.display = 'flex';
                     startAlarm();
                 } else {
