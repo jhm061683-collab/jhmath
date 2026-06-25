@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- 모바일 웹앱(PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -11,9 +12,10 @@
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
     <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
 
+    <!-- 카카오톡 썸네일 설정 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
-    <meta property="og:description" content="동산동 학원의 자부심! 맞춤형 시험 시간 계산 및 알람 타이머 제공">
+    <meta property="og:description" content="동산동의 자부심, 결과로 증명합니다! 맞춤형 시험 시간 계산기">
     <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&q=80">
     <meta property="og:url" content="https://jhm061683-collab.github.io/jhmath/">
 
@@ -25,116 +27,168 @@
             -webkit-tap-highlight-color: transparent;
         }
         body {
-            background-color: #f5f7fa;
+            background-color: #f8f9fa;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
         .container {
             background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 400px;
-            padding: 24px;
+            max-width: 430px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.03);
         }
-        .brand-header {
-            text-align: center;
-            margin-bottom: 16px;
+        
+        /* [1] 브랜드 바 영역 (연한 회색 배경 띠) */
+        .brand-top-bar {
+            background-color: #f1f3f5;
+            padding: 22px 24px;
+            width: 100%;
+            text-align: center; /* 전체 중앙 정렬 제어 */
         }
-        .brand-logo {
-            max-width: 160px;
-            height: auto;
-            display: inline-block;
+        
+        /* [핵심수정] 불필요한 서브 문구를 과감히 빼고 정중앙을 완벽히 잡은 대칭형 타이틀 */
+        .brand-logo-line {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 완벽한 수평 중앙 정렬 */
+            gap: 10px;
+            margin-bottom: 14px;
         }
-        .brand-slogan {
-            font-size: 0.8rem;
-            color: #868e96;
-            font-weight: 500;
-            letter-spacing: -0.5px;
+        .brand-title-text {
+            font-size: 1.8rem; /* 가운데 정렬에 맞춰 시원하게 크기 보강 */
+            font-weight: 900; /* Extra Bold 아주 굵고 진하게 */
+            color: #000000;
+            letter-spacing: -1.2px;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        /* [2] 슬로건 영역 (중앙 정렬 기조 유지 및 명조체 품격 확보) */
+        .brand-slogan-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 12px;
             margin-top: 4px;
         }
-        h2 {
+        .slogan-line {
+            flex: 1;
+            height: 1px;
+            background-color: #ced4da; /* 양옆 대칭을 이루는 가로선 스페이서 */
+        }
+        .brand-slogan-text {
+            font-size: 0.8rem;
+            color: #1b4332; /* 묵직한 다크 그린 톤 */
+            font-weight: 700;
+            letter-spacing: 1.5px; /* 자간 확장을 통한 정갈한 신뢰감 연출 */
+            white-space: nowrap;
+            font-family: "Noto Serif KR", "Georgia", serif;
+        }
+        
+        /* [3] 하단 기능 영역과의 구분선 */
+        .brand-separator {
+            width: 100%;
+            height: 1px;
+            background-color: #dee2e6;
+        }
+        
+        /* 메인 도구 영역 */
+        .main-content {
+            padding: 32px 24px 24px 24px;
+            flex: 1;
+        }
+        .main-tool-title {
             text-align: center;
             color: #1a1f36;
             margin-top: 0;
-            margin-bottom: 24px;
-            font-size: 1.3rem;
-            font-weight: 700;
+            margin-bottom: 32px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
         }
+        
         .school-toggle {
             display: flex;
             background-color: #f1f3f5;
             padding: 4px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
         }
         .school-toggle button {
             flex: 1;
             border: none;
             background: none;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: #495057;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.2s ease;
         }
         .school-toggle button.active {
             background-color: #2b8a3e;
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(43, 138, 62, 0.3);
+            box-shadow: 0 2px 8px rgba(43, 138, 62, 0.25);
         }
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.88rem;
+            font-weight: 700;
             color: #495057;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
         }
         input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 16px;
             font-size: 1rem;
             border: 1.5px solid #dee2e6;
-            border-radius: 8px;
+            border-radius: 10px;
             outline: none;
             transition: border-color 0.2s ease;
+            background-color: #fafbfc;
         }
         input:focus {
             border-color: #2b8a3e;
+            background-color: #ffffff;
         }
         .result-box {
             background-color: #f8f9fa;
             border: 1px solid #e9ecef;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 24px;
         }
         .result-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .result-item:last-child {
             margin-bottom: 0;
         }
         .result-label {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             color: #495057;
+            font-weight: 500;
         }
         .result-value {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             color: #1c7ed6;
         }
         .result-value.score {
@@ -142,17 +196,18 @@
         }
         
         .timer-section {
-            margin-top: 24px;
-            border-top: 2px dashed #dee2e6;
-            padding-top: 20px;
+            margin-top: 32px;
+            border-top: 2px dashed #e9ecef;
+            padding-top: 24px;
             text-align: center;
         }
         .timer-display {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 800;
             color: #212529;
-            margin: 10px 0 16px 0;
+            margin: 12px 0 20px 0;
             font-variant-numeric: tabular-nums;
+            letter-spacing: 0.5px;
         }
         .btn-container {
             display: flex;
@@ -160,39 +215,39 @@
         }
         .timer-btn {
             flex: 1;
-            padding: 14px;
+            padding: 16px;
             font-size: 1.1rem;
             font-weight: 700;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
         .btn-start {
             background-color: #12b886;
             color: white;
-            box-shadow: 0 4px 12px rgba(18, 184, 134, 0.25);
+            box-shadow: 0 4px 12px rgba(18, 184, 134, 0.2);
         }
         .btn-pause {
             background-color: #f59f00;
             color: white;
-            box-shadow: 0 4px 12px rgba(245, 159, 0, 0.25);
+            box-shadow: 0 4px 12px rgba(245, 159, 0, 0.2);
         }
         .btn-reset {
             background-color: #fa5252;
             color: white;
-            box-shadow: 0 4px 12px rgba(250, 82, 82, 0.25);
+            box-shadow: 0 4px 12px rgba(250, 82, 82, 0.2);
             flex: 0 0 35%;
         }
 
         .brand-footer {
-            margin-top: 24px;
-            padding-top: 16px;
+            margin-top: 40px;
+            padding-top: 20px;
             border-top: 1px solid #f1f3f5;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: #868e96;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .brand-footer a {
             color: #2b8a3e;
@@ -204,7 +259,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
             z-index: 999;
             justify-content: center;
             align-items: center;
@@ -212,93 +267,114 @@
         }
         .modal-content {
             background-color: #ffffff;
-            border-radius: 14px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 28px;
             width: 100%;
             max-width: 320px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            animation: popUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popUp {
-            from { transform: scale(0.8); opacity: 0; }
+            from { transform: scale(0.85); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
         .modal-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.35rem;
+            font-weight: 800;
             color: #e03131;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .modal-body {
-            font-size: 1rem;
+            font-size: 0.98rem;
             color: #495057;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            margin-bottom: 24px;
+            line-height: 1.6;
         }
         .modal-btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             font-size: 1rem;
             font-weight: 700;
             background-color: #2b8a3e;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(43, 138, 62, 0.3);
+            box-shadow: 0 4px 12px rgba(43, 138, 62, 0.2);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="brand-header">
-        <img src="image_20ac9d.png" alt="이룸학원 로고" class="brand-logo">
-        <div class="brand-slogan">동산동 학원의 자부심!</div>
-    </div>
-    
-    <h2>시험 시간 & 점수 환산기</h2>
-    
-    <div class="school-toggle">
-        <button id="btn-middle" class="active" onclick="setSchool('middle')">중학생 (35분)</button>
-        <button id="btn-high" onclick="setSchool('high')">고등학생 (40분)</button>
-    </div>
-
-    <div class="form-group">
-        <label for="max-score">시험지 만점 (점)</label>
-        <input type="number" id="max-score" placeholder="예: 80">
-    </div>
-    
-    <div class="form-group">
-        <label for="my-score">내가 맞은 총점 (점)</label>
-        <input type="number" id="my-score" placeholder="예: 40">
-    </div>
-
-    <div class="result-box">
-        <div class="result-item">
-            <span class="result-label">⏱️ 배정 시간</span>
-            <span class="result-value" id="res-time">- 분</span>
+    <!-- 브랜드 바 영역 (완벽 중앙 밸런스 핏) -->
+    <div class="brand-top-bar">
+        <div class="brand-logo-line">
+            <!-- 수평 중앙에 이룸학원 타이포와 함께 위치할 벡터 북 마크 심볼 -->
+            <svg class="brand-book-icon" width="20" height="17" viewBox="0 0 110 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M55 78V20C43 20 23 11 11 15V71C26 68 43 75 55 78Z" fill="#52b788"/>
+                <path d="M55 78V20C67 20 87 11 99 15V71C84 68 67 75 55 78Z" fill="#52b788"/>
+                <rect x="52" y="17" width="6" height="64" rx="1" fill="#1b4332"/>
+            </svg>
+            <h1 class="brand-title-text">이룸학원</h1>
         </div>
-        <div class="result-item">
-            <span class="result-label">💯 100점 환산 점수</span>
-            <span class="result-value score" id="res-score">- 점</span>
-        </div>
-    </div>
-
-    <div class="timer-section">
-        <label>⏳ 실시간 시험 타이머</label>
-        <div class="timer-display" id="timer-text">00:00</div>
         
-        <div class="btn-container">
-            <button id="btn-toggle" class="timer-btn btn-start" onclick="toggleTimer()">시험 시작</button>
-            <button id="btn-reset" class="timer-btn btn-reset" onclick="resetTimer()" style="display: none;">초기화</button>
+        <!-- 슬로건 영역 (가로선 스페이서 밸런스 고정) -->
+        <div class="brand-slogan-container">
+            <div class="slogan-line"></div>
+            <div class="brand-slogan-text">동산동의 자부심, 결과로 증명합니다.</div>
+            <div class="slogan-line"></div>
         </div>
     </div>
+    
+    <!-- 정교한 분리 구분선 -->
+    <div class="brand-separator"></div>
+    
+    <!-- 메인 도구 UI 영역 -->
+    <div class="main-content">
+        <h1 class="main-tool-title">시험 시간 & 점수 환산기</h1>
+        
+        <div class="school-toggle">
+            <button id="btn-middle" class="active" onclick="setSchool('middle')">중학생 (35분)</button>
+            <button id="btn-high" onclick="setSchool('high')">고등학생 (40분)</button>
+        </div>
 
-    <div class="brand-footer">
-        이 프로그램은 <b>이룸익산학원</b>에서 제공합니다.<br>
-        교육 및 학습 상담: <a href="tel:010-9751-8180">010-9751-8180</a>
+        <div class="form-group">
+            <label for="max-score">시험지 만점 (점)</label>
+            <input type="number" id="max-score" placeholder="예: 80">
+        </div>
+        
+        <div class="form-group">
+            <label for="my-score">내가 맞은 총점 (점)</label>
+            <input type="number" id="my-score" placeholder="예: 40">
+        </div>
+
+        <div class="result-box">
+            <div class="result-item">
+                <span class="result-label">⏱️ 배정 시간</span>
+                <span class="result-value" id="res-time">- 분</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">💯 100점 환산 점수</span>
+                <span class="result-value score" id="res-score">- 점</span>
+            </div>
+        </div>
+
+        <div class="timer-section">
+            <label>⏳ 실시간 시험 타이머</label>
+            <div class="timer-display" id="timer-text">00:00</div>
+            
+            <div class="btn-container">
+                <button id="btn-toggle" class="timer-btn btn-start" onclick="toggleTimer()">시험 시작</button>
+                <button id="btn-reset" class="timer-btn btn-reset" onclick="resetTimer()" style="display: none;">초기화</button>
+            </div>
+        </div>
+
+        <div class="brand-footer">
+            이 프로그램은 <b>이룸익산학원</b>에서 제공합니다.<br>
+            교육 및 학습 상담: <a href="tel:010-9751-8180">010-9751-8180</a>
+        </div>
     </div>
 </div>
 
@@ -402,6 +478,11 @@
         }
     }
 
+    document.getElementById('max-score').addEventListener('input', calculate);
+    document.getElementById('max-score').addEventListener('keyup', calculate);
+    document.getElementById('my-score').addEventListener('input', calculate);
+    document.getElementById('my-score').addEventListener('keyup', calculate);
+    
     function updateTimerDisplay(seconds) {
         var min = Math.floor(seconds / 60);
         var sec = seconds % 60;
@@ -476,11 +557,6 @@
         
         calculate();
     }
-
-    document.getElementById('max-score').addEventListener('input', calculate);
-    document.getElementById('max-score').addEventListener('keyup', calculate);
-    document.getElementById('my-score').addEventListener('input', calculate);
-    document.getElementById('my-score').addEventListener('keyup', calculate);
 </script>
 
 </body>
