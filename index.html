@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- 모바일 웹앱(PWA) 설정 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -11,6 +12,7 @@
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
     <link rel="icon" href="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=180&h=180&fit=crop">
 
+    <!-- 카카오톡 썸네일 설정 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="이룸익산학원 - 시험 시간 & 점수 환산기">
     <meta property="og:description" content="동산동의 자부심, 결과로 증명합니다! 맞춤형 시험 시간 계산기">
@@ -178,15 +180,16 @@
             gap: 8px;
         }
         .btn-calc-pop {
-            padding: 0 16px;
+            width: 100%;
+            padding: 10px;
             background-color: #e8f5e9;
             border: 1px solid #c8e6c9;
             color: #2b8a3e;
-            border-radius: 10px;
+            border-radius: 6px;
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
-            white-space: nowrap;
+            margin-bottom: 20px;
         }
         label {
             display: block;
@@ -285,8 +288,30 @@
             flex: 0 0 35%;
         }
 
+        /* 방문자수 카운터 보드 디자인 */
+        .visitor-counter-board {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            background-color: #f8f9fa;
+            border: 1px solid #f1f3f5;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 24px;
+        }
+        .visitor-item {
+            font-size: 0.8rem;
+            color: #495057;
+            font-weight: 600;
+        }
+        .visitor-num {
+            color: #2b8a3e;
+            font-weight: 800;
+            margin-left: 4px;
+        }
+
         .brand-footer {
-            margin-top: 40px;
+            margin-top: 24px;
             padding-top: 20px;
             border-top: 1px solid #f1f3f5;
             text-align: center;
@@ -321,7 +346,7 @@
             animation: popUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* [진짜 일반 계산기 디자인] */
+        /* 진짜 일반 계산기 디자인 */
         .calc-screen {
             width: 100%;
             padding: 12px;
@@ -357,7 +382,11 @@
             color: #2b8a3e;
         }
         .calc-pad button.cls {
-            background-color: #ffebd7;
+            background-color: #fff0f0;
+            color: #fa5252;
+        }
+        .calc-pad button.back {
+            background-color: #f1f3f5;
             color: #e03131;
         }
         .modal-btn {
@@ -412,11 +441,13 @@
 
         <div class="form-group">
             <label for="max-score">시험지 만점 (점)</label>
-            <div class="input-with-btn">
-                <input type="number" id="max-score" placeholder="예: 80" step="any">
-                <button class="btn-calc-pop" onclick="openGeneralCalc()">🧮 배점 계산기</button>
-            </div>
+            <input type="number" id="max-score" placeholder="예: 80" step="any">
         </div>
+        
+        <!-- 계산기 진입 유닛 -->
+        <button class="btn-calc-pop" onclick="openGeneralCalc()">
+            🧮 문항 배점이 여러 종류인가요? 합산 계산기 켜기
+        </button>
         
         <div class="form-group">
             <label for="my-score">내가 맞은 총점 (점)</label>
@@ -444,6 +475,13 @@
             </div>
         </div>
 
+        <!-- [신규 기능] 실시간 오늘/누적 방문자수 현황판 -->
+        <div class="visitor-counter-board">
+            <div class="visitor-item">Today <span class="visitor-num" id="visit-today">0</span></div>
+            <div class="visitor-item" style="color: #dee2e6;">|</div>
+            <div class="visitor-item">Total <span class="visitor-num" id="visit-total">0</span></div>
+        </div>
+
         <div class="brand-footer">
             이 프로그램은 <b>이룸익산학원</b>에서 제공합니다.<br>
             교육 및 학습 상담: <a href="tel:010-9751-8180">010-9751-8180</a>
@@ -451,13 +489,15 @@
     </div>
 </div>
 
+<!-- 팝업 1: 백스페이스(지우기) 탑재 계산기 모달 -->
 <div class="modal-overlay" id="general-calc-modal">
     <div class="modal-content">
         <div class="calc-screen" id="calc-expr">0</div>
         <div class="calc-pad">
             <button class="cls" onclick="pressCalc('C')">C</button>
+            <!-- [신규 반영] 학생들이 극찬할 한 글자 뒤로 지우기 버튼 -->
+            <button class="back" onclick="pressCalc('B')">⌫</button>
             <button class="op" onclick="pressCalc('(')">(</button>
-            <button class="op" onclick="pressCalc(')')">)</button>
             <button class="op" onclick="pressCalc('/')">÷</button>
             
             <button onclick="pressCalc('7')">7</button>
@@ -471,247 +511,4 @@
             <button class="op" onclick="pressCalc('-')">-</button>
             
             <button onclick="pressCalc('1')">1</button>
-            <button onclick="pressCalc('2')">2</button>
-            <button onclick="pressCalc('3')">3</button>
-            <button class="op" onclick="pressCalc('+')">+</button>
-            
-            <button onclick="pressCalc('0')">0</button>
-            <button onclick="pressCalc('.')">.</button>
-            <button class="op" style="grid-column: span 2; background-color: #2b8a3e; color: white;" onclick="pressCalc('=')">=</button>
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 14px;">
-            <button class="timer-btn btn-sub" style="padding: 12px 0;" onclick="closeGeneralCalc()">닫기</button>
-            <button class="timer-btn btn-start" style="padding: 12px 0; background-color: #1c7ed6; box-shadow: none;" onclick="applyGeneralCalc()">만점으로 적용</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="end-modal">
-    <div class="modal-content">
-        <div class="modal-title">⏳ 시험 종료</div>
-        <div class="modal-body">시험 시간이 모두 완료되었습니다!<br>지정된 환산 점수를 확인하세요.</div>
-        <button class="modal-btn" onclick="closeModal()">확인 (소리 끄기)</button>
-    </div>
-</div>
-
-<script>
-    var currentSchool = 'middle';
-    var totalSeconds = 0; 
-    var timerInterval = null;
-    var timerState = 'stopped'; 
-    var audioCtx = null;
-    var alarmInterval = null;
-    var wakeLock = null;
-
-    // 진짜 일반 계산기 로직
-    var calcExprStr = '';
-    function openGeneralCalc() {
-        if (timerState !== 'stopped') return;
-        calcExprStr = '';
-        document.getElementById('calc-expr').innerText = '0';
-        document.getElementById('general-calc-modal').style.display = 'flex';
-    }
-    function closeGeneralCalc() {
-        document.getElementById('general-calc-modal').style.display = 'none';
-    }
-    function pressCalc(val) {
-        var screen = document.getElementById('calc-expr');
-        if (val === 'C') {
-            calcExprStr = '';
-            screen.innerText = '0';
-        } else if (val === '=') {
-            try {
-                if (calcExprStr !== '') {
-                    // 수식 계산 후 소수점 둘째자리 커트
-                    var result = eval(calcExprStr);
-                    calcExprStr = (Math.round(result * 100) / 100).toString();
-                    screen.innerText = calcExprStr;
-                }
-            } catch(e) {
-                screen.innerText = '오류';
-                calcExprStr = '';
-            }
-        } else {
-            calcExprStr += val;
-            screen.innerText = calcExprStr;
-        }
-    }
-    function applyGeneralCalc() {
-        pressCalc('='); // 최종 계산 강제 수행
-        var finalVal = parseFloat(document.getElementById('calc-expr').innerText);
-        if (!isNaN(finalVal) && finalVal > 0) {
-            document.getElementById('max-score').value = finalVal;
-            calculate();
-            closeGeneralCalc();
-        }
-    }
-
-    // 화면 꺼짐 방지(Wake Lock) 제어
-    async function requestWakeLock() {
-        if ('wakeLock' in navigator) {
-            try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
-        }
-    }
-    function releaseWakeLock() {
-        if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
-    }
-
-    function startAlarm() {
-        if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        function playSingleBeep() {
-            var oscillator = audioCtx.createOscillator();
-            var gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'sine';
-            oscillator.frequency.value = 600;
-            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.25);
-            gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.3);
-        }
-        playSingleBeep();
-        alarmInterval = setInterval(playSingleBeep, 1000);
-    }
-
-    function closeModal() {
-        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
-        document.getElementById('end-modal').style.display = 'none';
-        releaseWakeLock();
-    }
-
-    function setSchool(school) {
-        if (timerState !== 'stopped') return; 
-        currentSchool = school;
-        document.getElementById('btn-middle').className = (school === 'middle') ? 'active' : '';
-        document.getElementById('btn-high').className = (school === 'high') ? 'active' : '';
-        calculate();
-    }
-
-    function calculate() {
-        var maxScoreInput = document.getElementById('max-score').value;
-        var myScoreInput = document.getElementById('my-score').value;
-        var isSubjective = document.getElementById('check-subjective').checked;
-        
-        var maxScore = parseFloat(maxScoreInput);
-        var myScore = parseFloat(myScoreInput);
-        
-        var resTime = document.getElementById('res-time');
-        var resScore = document.getElementById('res-score');
-
-        if (!maxScoreInput || isNaN(maxScore) || maxScore <= 0) {
-            resTime.innerText = '- 분';
-            resScore.innerText = '- 점';
-            if (timerState === 'stopped') updateTimerDisplay(0);
-            return;
-        }
-
-        var baseTime = 40;
-        if (isSubjective) {
-            baseTime = (currentSchool === 'middle') ? 45 : 50;
-        } else {
-            baseTime = (currentSchool === 'middle') ? 35 : 40;
-        }
-        
-        var calculatedTime = baseTime * (maxScore / 100);
-        var displayTime = calculatedTime.toFixed(1);
-        if (displayTime % 1 === 0) displayTime = parseInt(displayTime);
-        resTime.innerText = displayTime + ' 분';
-
-        if (timerState === 'stopped') {
-            totalSeconds = Math.round(calculatedTime * 60);
-            updateTimerDisplay(totalSeconds);
-        }
-
-        if (myScoreInput !== '' && !isNaN(myScore) && myScore >= 0) {
-            var convertedScore = ((myScore / maxScore) * 100).toFixed(1);
-            if (convertedScore % 1 === 0) convertedScore = parseInt(convertedScore);
-            resScore.innerText = convertedScore + ' 점';
-        } else {
-            resScore.innerText = '- 점';
-        }
-    }
-
-    document.getElementById('max-score').addEventListener('input', calculate);
-    document.getElementById('max-score').addEventListener('keyup', calculate);
-    document.getElementById('my-score').addEventListener('input', calculate);
-    document.getElementById('my-score').addEventListener('keyup', calculate);
-    
-    function updateTimerDisplay(seconds) {
-        var min = Math.floor(seconds / 60);
-        var sec = seconds % 60;
-        var minStr = min < 10 ? '0' + min : min;
-        var secStr = sec < 10 ? '0' + sec : sec;
-        document.getElementById('timer-text').innerText = minStr + ':' + secStr;
-    }
-
-    function toggleTimer() {
-        var toggleBtn = document.getElementById('btn-toggle');
-        var resetBtn = document.getElementById('btn-reset');
-        
-        if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        
-        if (timerState === 'stopped' || timerState === 'paused') {
-            if (totalSeconds <= 0) {
-                alert('시험지 만점을 입력해야 타이머를 시작할 수 있습니다.');
-                return;
-            }
-            
-            timerState = 'running';
-            toggleBtn.innerText = '일시 정지';
-            toggleBtn.className = 'timer-btn btn-pause';
-            resetBtn.style.display = 'none';
-            
-            document.getElementById('max-score').blur();
-            requestWakeLock(); // 타이머 시작과 동시에 화면 꺼짐 차단 활성화
-            
-            timerInterval = setInterval(function() {
-                totalSeconds--;
-                if (totalSeconds <= 0) {
-                    updateTimerDisplay(0);
-                    clearInterval(timerInterval);
-                    timerState = 'stopped';
-                    toggleBtn.innerText = '시험 시작';
-                    toggleBtn.className = 'timer-btn btn-start';
-                    resetBtn.style.display = 'none';
-                    
-                    document.getElementById('end-modal').style.display = 'flex';
-                    startAlarm();
-                } else {
-                    updateTimerDisplay(totalSeconds);
-                }
-            }, 1000);
-            
-        } else if (timerState === 'running') {
-            clearInterval(timerInterval);
-            timerState = 'paused';
-            toggleBtn.innerText = '다시 시작';
-            toggleBtn.className = 'timer-btn btn-start';
-            resetBtn.style.display = 'block';
-            releaseWakeLock();
-        }
-    }
-
-    function resetTimer() {
-        clearInterval(timerInterval);
-        timerState = 'stopped';
-        
-        var toggleBtn = document.getElementById('btn-toggle');
-        var resetBtn = document.getElementById('btn-reset');
-        
-        toggleBtn.innerText = '시험 시작';
-        toggleBtn.className = 'timer-btn btn-start';
-        resetBtn.style.display = 'none';
-        
-        if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
-        document.getElementById('end-modal').style.display = 'none';
-        
-        releaseWakeLock();
-        calculate();
-    }
-</script>
-
-</body>
-</html>
+            <buttonNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
